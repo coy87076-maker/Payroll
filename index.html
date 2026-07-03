@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Payroll System using JavaScript DOM</title>
+
+<style>
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:Arial,Helvetica,sans-serif;
+}
+
+body{
+    background:#eef2f7;
+    padding:30px;
+}
+
+.container{
+    width:700px;
+    margin:auto;
+    background:white;
+    padding:25px;
+    border-radius:10px;
+    box-shadow:0 0 15px rgba(0,0,0,.2);
+}
+
+h1{
+    text-align:center;
+    margin-bottom:20px;
+}
+
+input,select{
+    width:100%;
+    padding:10px;
+    margin:8px 0;
+}
+
+button{
+    padding:12px;
+    width:100%;
+    border:none;
+    background:royalblue;
+    color:white;
+    font-size:17px;
+    cursor:pointer;
+    border-radius:5px;
+}
+
+button:hover{
+    background:#003cb3;
+}
+
+.result{
+    margin-top:20px;
+    padding:20px;
+    background:#f5f5f5;
+    border-radius:8px;
+}
+
+.highlight{
+    color:green;
+    font-weight:bold;
+}
+
+table{
+    width:100%;
+    border-collapse:collapse;
+    margin-top:15px;
+}
+
+table,th,td{
+    border:1px solid gray;
+}
+
+th,td{
+    padding:8px;
+    text-align:center;
+}
+
+</style>
+
+</head>
+<body>
+
+<div class="container">
+
+<h1 id="title">Payroll Calculator</h1>
+
+<input type="text" id="empName" placeholder="Employee Name">
+
+<input type="number" id="hours" placeholder="Hours Worked">
+
+<input type="number" id="rate" placeholder="Hourly Rate">
+
+<select id="status">
+
+<option value="Regular">Regular</option>
+<option value="Contractual">Contractual</option>
+<option value="Part-Time">Part-Time</option>
+
+</select>
+
+<button onclick="computePayroll()">Compute Payroll</button>
+
+<div class="result" id="output">
+
+<h2>Payroll Summary</h2>
+
+</div>
+
+</div>
+
+<script>
+
+function computePayroll(){
+
+// getElementById()
+
+let name=document.getElementById("empName").value;
+let hours=document.getElementById("hours").value;
+let rate=document.getElementById("rate").value;
+let status=document.getElementById("status").value;
+
+// Validation
+
+if(name=="" || hours=="" || rate==""){
+    alert("Complete all fields.");
+    return;
+}
+
+// Payroll
+
+let gross=hours*rate;
+
+let tax=0;
+
+if(gross>=50000)
+    tax=gross*.20;
+else if(gross>=30000)
+    tax=gross*.15;
+else
+    tax=gross*.10;
+
+// Allowance
+
+let allowance=0;
+
+if(status=="Regular")
+    allowance=3000;
+else if(status=="Contractual")
+    allowance=1500;
+else
+    allowance=500;
+
+let net=(gross-tax)+allowance;
+
+
+// querySelector()
+
+document.querySelector("#title").textContent="Payroll Successfully Computed";
+
+// querySelectorAll()
+
+let inputs=document.querySelectorAll("input");
+
+inputs.forEach(function(box){
+    box.style.background="#ffffdd";
+});
+
+// getElementsByClassName()
+
+let result=document.getElementsByClassName("result")[0];
+
+// innerHTML
+
+result.innerHTML="";
+
+// createElement()
+
+let heading=document.createElement("h2");
+
+heading.textContent="Employee Payroll";
+
+heading.setAttribute("class","highlight");
+
+// appendChild()
+
+result.appendChild(heading);
+
+// create Table
+
+let table=document.createElement("table");
+
+table.innerHTML=`
+
+<tr>
+<th>Description</th>
+<th>Value</th>
+</tr>
+
+<tr>
+<td>Name</td>
+<td>${name}</td>
+</tr>
+
+<tr>
+<td>Hours Worked</td>
+<td>${hours}</td>
+</tr>
+
+<tr>
+<td>Hourly Rate</td>
+<td>₱${Number(rate).toFixed(2)}</td>
+</tr>
+
+<tr>
+<td>Status</td>
+<td>${status}</td>
+</tr>
+
+<tr>
+<td>Gross Pay</td>
+<td>₱${gross.toFixed(2)}</td>
+</tr>
+
+<tr>
+<td>Tax</td>
+<td>₱${tax.toFixed(2)}</td>
+</tr>
+
+<tr>
+<td>Allowance</td>
+<td>₱${allowance.toFixed(2)}</td>
+</tr>
+
+<tr>
+<td><b>Net Pay</b></td>
+<td><b>₱${net.toFixed(2)}</b></td>
+</tr>
+
+`;
+
+result.appendChild(table);
+
+
+// getElementsByTagName()
+
+let cells=document.getElementsByTagName("tr");
+
+for(let i=0;i<cells.length;i++){
+
+    if(i%2==1){
+        cells[i].style.fontWeight="bold";
+    }
+
+}
+
+// removeChild()
+
+let oldParagraph=document.querySelector(".note");
+
+if(oldParagraph!=null){
+    result.removeChild(oldParagraph);
+}
+
+// createElement()
+
+let note=document.createElement("p");
+
+note.textContent="Payroll generated successfully.";
+
+note.setAttribute("class","note");
+
+result.appendChild(note);
+
+}
+
+</script>
+
+</body>
+</html>
+
